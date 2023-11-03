@@ -1,0 +1,17 @@
+<?php if (!empty($flash)) :?>
+    <div><?= $flash['success'][0] ?></div>
+<?php endif; ?>
+<form action="/users" method="get">
+    <input type="search" name="term">
+    <input type="submit" value="Search">
+</form>
+<ol>
+    <?php foreach ($users as $user) :?>
+    <li>
+        <ul>
+            <li>Nickname: <?= htmlspecialchars($user['nickname']); ?></li>
+            <li>Email: <?= htmlspecialchars($user['email']); ?></li>
+        </ul>
+    </li>
+    <?php endforeach; ?>
+</ol>
