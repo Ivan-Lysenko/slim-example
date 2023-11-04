@@ -31,7 +31,7 @@ $app->get('/users', function ($request, $response) {
     $params = ['users' => $filteredUsers, 'flash' => $messages];
     //var_dump($params);exit;
     return $this->get('renderer')->render($response, 'users/index.phtml', $params);
-});
+})->setName('users');
 
 $app->get('/users/new', function ($request, $response) {
     return $this->get('renderer')->render($response, 'users/new.phtml');
@@ -42,11 +42,11 @@ $app->get('/users/{id}', function ($request, $response, $args) {
     $users = json_decode(file_get_contents('../data/users.json'), true);
     $filteredUsers = array_filter($users, fn ($user) => $user['id'] === $id);
     if (count($filteredUsers) === 0) {
-        return $response->withRedirect("/users", 404);
+        return $response->withRedirect('users', 404);
     }
     $params = ['nickname' => 'user-' . $id];
     return $this->get('renderer')->render($response, 'users/show.phtml', $params);
-});
+})->setName('user');
 
 $app->post('/users', function ($request, $response) {
     $newUser = $request->getParsedBodyParam('user');
@@ -59,13 +59,13 @@ $app->post('/users', function ($request, $response) {
         $existsUsers[] = $newUser;
     file_put_contents('../data/users.json', json_encode($existsUsers));
     $this->get('flash')->addMessage('success', 'Пользователь сохранен');
-    return $response->withRedirect("/users");
+    return $response->withRedirect('users');
 });
 
-$app->get('/coursers/{id}', function ($request, $response, $args) {
+$app->get('/courses/{id}', function ($request, $response, $args) {
     $id = $args['id'];
     return $response->write("Course id: {$id}");
-});
+})->setName('course');
 
 
 $app->run();
