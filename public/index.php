@@ -26,15 +26,19 @@ $app->get('/users', function ($request, $response) {
     $term = $request->getQueryParam('term');
     $users = json_decode(file_get_contents('../data/users.json'), true);
     $messages = $this->get('flash')->getMessages();
-    //var_dump($users);exit;
+
     $filteredUsers = array_filter($users, fn ($user) => str_contains($user['nickname'], $term));
     $params = ['users' => $filteredUsers, 'flash' => $messages];
-    //var_dump($params);exit;
+    
     return $this->get('renderer')->render($response, 'users/index.phtml', $params);
 })->setName('users');
 
 $app->get('/users/new', function ($request, $response) {
-    return $this->get('renderer')->render($response, 'users/new.phtml');
+    $params = [
+        'user' => [],
+        'errors' => []
+    ];
+    return $this->get('renderer')->render($response, 'users/new.phtml', $params);
 });
 
 $app->get('/users/{id}', function ($request, $response, $args) {
@@ -50,16 +54,35 @@ $app->get('/users/{id}', function ($request, $response, $args) {
 
 $app->post('/users', function ($request, $response) {
     $newUser = $request->getParsedBodyParam('user');
-    $newUser['id'] = uniqid();
-    if (!file_exists('../data/users.json')) {
-        $existsUsers = [];
-    } else {
-        $existsUsers = json_decode(file_get_contents('../data/users.json'), true);
+    $errors = [];
+
+    if (!$newUser['nickname']) {
+        $errors['nickname'] = 'The field is require';
     }
+
+    if (!$newUser['email']) {
+        $errors['email'] = 'The field is require';
+    }
+
+    if (count($errors) === 0) {
+        
+        $newUser['id'] = uniqid();
+
+        if (!file_exists('../data/users.json')) {
+        $existsUsers = [];
+        } else {
+        $existsUsers = json_decode(file_get_contents('../data/users.json'), true);
+        }
+
         $existsUsers[] = $newUser;
-    file_put_contents('../data/users.json', json_encode($existsUsers));
-    $this->get('flash')->addMessage('success', 'Пользователь сохранен');
-    return $response->withRedirect('users');
+        file_put_contents('../data/users.json', json_encode($existsUsers));
+        $this->get('flash')->addMessage('success', 'Пользователь сохранен');
+        return $response->withRedirect('users');
+    }
+
+    $params = ['user' => $newUser, 'errors' => $errors];
+
+    return $this->get('renderer')->render($response, 'users/new.phtml', $params);
 });
 
 $app->get('/courses/{id}', function ($request, $response, $args) {

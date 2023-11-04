@@ -3,14 +3,20 @@
     <div>
        <label>
             Имя пользователя
-            <input type="text" name="user[nickname]">
+            <input type="text" name="user[nickname]" value="<?= htmlspecialchars($user['nickname']) ?? '' ?>" require>
         </label>
+        <?php if (!empty($errors['nickname'])) :?>
+            <div><?= $errors['nickname'] ?></div>
+        <?php endif; ?>
     </div>
     <div>
         <label>
             Email
-            <input type="email" name="user[email]">
+            <input type="email" name="user[email]" value="<?= htmlspecialchars($user['email']) ?? '' ?>" require>
         </label>
+        <?php if (!empty($errors['email'])) :?>
+            <div><?= $errors['email'] ?></div>
+        <?php endif; ?>
     </div>
     <input type="submit" value="Submit">
 </form>
