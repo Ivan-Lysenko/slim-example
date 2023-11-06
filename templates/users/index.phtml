@@ -11,6 +11,7 @@
         <ul>
             <li>Nickname: <?= htmlspecialchars($user['nickname']); ?></li>
             <li>Email: <?= htmlspecialchars($user['email']); ?></li>
+            <li><a href="users/<?= htmlspecialchars($user['id']); ?>/edit">Редактировать</a></li>
         </ul>
     </li>
     <?php endforeach; ?>
