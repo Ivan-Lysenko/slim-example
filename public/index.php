@@ -91,8 +91,11 @@ $app->get('/users/{id}/edit', function ($request, $response, $args) {
     $id = $args['id'];
     // var_dump($id);exit;
     $users = json_decode(file_get_contents('../data/users.json'), true);
-    $user = array_filter($users, fn ($user) => $user['id'] === $id)[0];
-
+    // var_dump($id);
+    // var_dump($users);exit;
+    $user = array_filter($users, fn ($user) => $user['id'] === $id);
+    $user = array_values($user)[0];
+    // var_dump($user);exit;
     if (count($user) === 0) {
         return $response->withRedirect('users', 404);
     }
@@ -108,7 +111,8 @@ $app->get('/users/{id}/edit', function ($request, $response, $args) {
 $app->patch('/users/{id}', function ($request, $response, $args) {
     $id = $args['id'];
     $users = json_decode(file_get_contents('../data/users.json'), true);
-    $user = array_filter($users, fn ($user) => $user['id'] === $id)[0];
+    $user = array_filter($users, fn ($user) => $user['id'] === $id);
+    $user = array_values($user)[0];
     $userData = $request->getParsedBodyParam('user');
     $errors = [];
 
@@ -139,6 +143,7 @@ $app->patch('/users/{id}', function ($request, $response, $args) {
         'errors' => $errors,
         'user' => $user
     ];
+    //var_dump($params);exit;
 
     return $this->get('renderer')->render($response->withStatus(422), '/users/edit.phtml', $params);
 });
