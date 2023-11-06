@@ -131,7 +131,7 @@ $app->patch('/users/{id}', function ($request, $response, $args) {
 
         file_put_contents('../data/users.json', json_encode($users, JSON_PRETTY_PRINT));
         $this->get('flash')->addMessage('success', 'User has been updated');
-        
+
         return $response->withRedirect("/users");
     }
 
@@ -141,6 +141,16 @@ $app->patch('/users/{id}', function ($request, $response, $args) {
     ];
 
     return $this->get('renderer')->render($response->withStatus(422), '/users/edit.phtml', $params);
+});
+
+$app->delete('/users/{id}', function ($request, $response, $args) {
+    $id = $args['id'];
+    $users = json_decode(file_get_contents('../data/users.json'), true);
+    $newUsers = array_filter($users, fn ($user) => $user['id'] !== $id);
+
+    file_put_contents('../data/users.json', json_encode($newUsers, JSON_PRETTY_PRINT));
+    $this->get('flash')->addMessage('success', 'User has been deleted');
+    return $response->withRedirect('/users');
 });
 
 $app->get('/courses/{id}', function ($request, $response, $args) {

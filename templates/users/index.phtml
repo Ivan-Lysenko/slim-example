@@ -12,6 +12,12 @@
             <li>Nickname: <?= htmlspecialchars($user['nickname']); ?></li>
             <li>Email: <?= htmlspecialchars($user['email']); ?></li>
             <li><a href="users/<?= htmlspecialchars($user['id']); ?>/edit">Редактировать</a></li>
+            <li>
+                <form action="users/<?= htmlspecialchars($user['id']); ?>" method="post">
+                    <input type="hidden" name="_METHOD" value="DELETE">
+                    <input type="submit" value="Delete">
+                </form>
+            </li>
         </ul>
     </li>
     <?php endforeach; ?>

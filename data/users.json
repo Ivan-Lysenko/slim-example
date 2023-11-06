@@ -1,52 +1,37 @@
-[
-    {
-        "nickname": "fgfghfge365345",
-        "email": "asd@asdf",
-        "id": "6544f20c4f302"
-    },
-    {
-        "nickname": "123",
-        "email": "kdfgh@sdfg",
-        "id": "6544f86e24a63"
-    },
-    {
-        "nickname": "ghjg",
-        "email": "jrty@hfg",
-        "id": "6544f934b0d8a"
-    },
-    {
+{
+    "3": {
         "nickname": "sdfgdfg",
         "email": "kdfgh@sdfg",
         "id": "6544f9691d812"
     },
-    {
+    "4": {
         "nickname": "dfgfg",
         "email": "ddf@sdghdfh",
         "id": "6544f984d4fa7"
     },
-    {
+    "5": {
         "nickname": "sdfsdfsdfff",
         "email": "435@sdg",
         "id": "6544f9b9676c7"
     },
-    {
+    "6": {
         "nickname": "45hn",
         "email": "435@sdg",
         "id": "65461da784fea"
     },
-    {
+    "7": {
         "nickname": "dtyuj5634",
         "email": "rtyjh@fgshd",
         "id": "65461dc35d68e"
     },
-    {
+    "8": {
         "nickname": "dtyuj5634",
         "email": "rtyjh@fgshd",
         "id": "65461dcf424b3"
     },
-    {
+    "9": {
         "nickname": "asdasfgh",
         "email": "dfg@ewdfg",
         "id": "654630a375a6a"
     }
-]
+}
