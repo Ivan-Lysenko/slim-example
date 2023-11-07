@@ -26,7 +26,8 @@ $app->get('/', function ($request, $response) {
 
 $app->get('/users', function ($request, $response) {
     $term = $request->getQueryParam('term');
-    $users = json_decode(file_get_contents('../data/users.json'), true);
+    $users = json_decode($request->getCookieParam('users', json_encode([])), true);
+    //var_dump($_COOKIE);exit;
     $messages = $this->get('flash')->getMessages();
 
     $filteredUsers = array_filter($users, fn ($user) => str_contains($user['nickname'], $term));
@@ -36,6 +37,7 @@ $app->get('/users', function ($request, $response) {
 })->setName('users');
 
 $app->get('/users/new', function ($request, $response) {
+    
     $params = [
         'user' => [],
         'errors' => []
@@ -45,7 +47,7 @@ $app->get('/users/new', function ($request, $response) {
 
 $app->get('/users/{id}', function ($request, $response, $args) {
     $id = $args['id'];
-    $users = json_decode(file_get_contents('../data/users.json'), true);
+    $users = json_decode($request->getCookieParam('users', json_encode([])), true);
     $filteredUsers = array_filter($users, fn ($user) => $user['id'] === $id);
     if (count($filteredUsers) === 0) {
         return $response->withRedirect('users', 404);
@@ -69,17 +71,16 @@ $app->post('/users', function ($request, $response) {
     if (count($errors) === 0) {
         
         $newUser['id'] = uniqid();
-
-        if (!file_exists('../data/users.json')) {
-            $existsUsers = [];
-        } else {
-            $existsUsers = json_decode(file_get_contents('../data/users.json'), true);
-        }
-
+        $existsUsers = json_decode($request->getCookieParam('users', json_encode([])), true);
+        //var_dump($newUser);
+        
         $existsUsers[] = $newUser;
-        file_put_contents('../data/users.json', json_encode($existsUsers, JSON_PRETTY_PRINT));
+        
+        $encodedUsers = json_encode($existsUsers);
+        //var_dump($encodedUsers);exit;
         $this->get('flash')->addMessage('success', 'Пользователь сохранен');
-        return $response->withRedirect('users');
+
+        return $response->withHeader('Set-Cookie', "users={$encodedUsers}; Path=/")->withRedirect("/users");
     }
 
     $params = ['user' => $newUser, 'errors' => $errors];
@@ -90,7 +91,7 @@ $app->post('/users', function ($request, $response) {
 $app->get('/users/{id}/edit', function ($request, $response, $args) {
     $id = $args['id'];
     // var_dump($id);exit;
-    $users = json_decode(file_get_contents('../data/users.json'), true);
+    $users = json_decode($request->getCookieParam('users', json_encode([])), true);
     // var_dump($id);
     // var_dump($users);exit;
     $user = array_filter($users, fn ($user) => $user['id'] === $id);
@@ -110,7 +111,7 @@ $app->get('/users/{id}/edit', function ($request, $response, $args) {
 
 $app->patch('/users/{id}', function ($request, $response, $args) {
     $id = $args['id'];
-    $users = json_decode(file_get_contents('../data/users.json'), true);
+    $users = json_decode($request->getCookieParam('users', json_encode([])), true);
     $user = array_filter($users, fn ($user) => $user['id'] === $id);
     $user = array_values($user)[0];
     $userData = $request->getParsedBodyParam('user');
@@ -133,10 +134,10 @@ $app->patch('/users/{id}', function ($request, $response, $args) {
             return $user;
         }, $users);
 
-        file_put_contents('../data/users.json', json_encode($users, JSON_PRETTY_PRINT));
+        $encodedUsers = json_encode($users);
         $this->get('flash')->addMessage('success', 'User has been updated');
 
-        return $response->withRedirect("/users");
+        return $response->withHeader('Set-Cookie', "users={$encodedUsers}; Path=/")->withRedirect("/users");
     }
 
     $params = [
@@ -150,12 +151,12 @@ $app->patch('/users/{id}', function ($request, $response, $args) {
 
 $app->delete('/users/{id}', function ($request, $response, $args) {
     $id = $args['id'];
-    $users = json_decode(file_get_contents('../data/users.json'), true);
+    $users = json_decode($request->getCookieParam('users', json_encode([])), true);
     $newUsers = array_filter($users, fn ($user) => $user['id'] !== $id);
 
-    file_put_contents('../data/users.json', json_encode($newUsers, JSON_PRETTY_PRINT));
+    $encodedUsers = json_encode($newUsers);
     $this->get('flash')->addMessage('success', 'User has been deleted');
-    return $response->withRedirect('/users');
+    return $response->withHeader('Set-Cookie', "users={$encodedUsers}; Path=/")->withRedirect("/users");
 });
 
 $app->get('/courses/{id}', function ($request, $response, $args) {
