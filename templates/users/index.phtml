@@ -1,6 +1,12 @@
 <?php if (!empty($flash)) :?>
     <div><?= $flash['success'][0] ?></div>
 <?php endif; ?>
+<?php if (!empty($_SESSION['user'])) :?>
+    <h3>Hello, <?= $_SESSION['user']['nickname'] ?></h3>
+    <form action="/logout" method="get">
+        <input type="submit" value="Logout">
+    </form>
+<?php endif; ?>
 <form action="/users" method="get">
     <input type="search" name="term">
     <input type="submit" value="Search">

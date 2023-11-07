@@ -1,0 +1,11 @@
+<h1>Login</h1>
+<?php if (!empty($errors['auth'])) :?>
+        <div><?= $errors['auth'] ?></div>
+    <?php endif; ?>
+<form action="/login" method="post">
+    <input type="email" name="user[email]">
+    <?php if (!empty($errors['email'])) :?>
+        <div><?= $errors['email'] ?></div>
+    <?php endif; ?>
+    <input type="submit" value="Submit">
+</form>
